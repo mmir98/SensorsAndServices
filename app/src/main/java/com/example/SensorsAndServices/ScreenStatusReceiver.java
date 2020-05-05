@@ -1,15 +1,13 @@
-package com.example.hibernate;
+package com.example.SensorsAndServices;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 
-public class ScreenStatusReceiver extends BroadcastReceiver implements Parcelable {
+public class ScreenStatusReceiver extends BroadcastReceiver{
     private static final String TAG = "ScreenStatusReceiver";
 
     public static final int DEVICE_SCREEN_ON = 3;
@@ -20,25 +18,6 @@ public class ScreenStatusReceiver extends BroadcastReceiver implements Parcelabl
     ScreenStatusReceiver(Handler handler){
         this.handler = handler;
     }
-
-    ScreenStatusReceiver(){
-
-    }
-
-    protected ScreenStatusReceiver(Parcel in) {
-    }
-
-    public static final Creator<ScreenStatusReceiver> CREATOR = new Creator<ScreenStatusReceiver>() {
-        @Override
-        public ScreenStatusReceiver createFromParcel(Parcel in) {
-            return new ScreenStatusReceiver(in);
-        }
-
-        @Override
-        public ScreenStatusReceiver[] newArray(int size) {
-            return new ScreenStatusReceiver[size];
-        }
-    };
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -51,14 +30,5 @@ public class ScreenStatusReceiver extends BroadcastReceiver implements Parcelabl
                 Log.d(TAG, "onReceive: SCREEN OFF");
                 handler.sendEmptyMessage(DEVICE_SCREEN_OFF);
             }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
     }
 }

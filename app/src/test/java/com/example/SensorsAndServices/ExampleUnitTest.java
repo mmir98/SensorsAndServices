@@ -1,4 +1,4 @@
-package com.example.hibernate;
+package com.example.SensorsAndServices;
 
 import org.junit.Test;
 

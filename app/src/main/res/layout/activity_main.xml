@@ -1,173 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="#90000000">
+    android:layout_height="match_parent">
 
-
-    <RelativeLayout
-        android:id="@+id/lockServiceRelativeLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="#cc000000"
-        android:layout_margin="2dp">
+        android:layout_height="match_parent"
+        android:background="#fff"
+        tools:context=".MainActivity">
 
-
-        <TextView
-            android:id="@+id/lock_service_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/lock_service_switch"
-            android:layout_alignBottom="@+id/lock_service_switch"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/sleep_mode_title"
-            style="@style/titles"/>
-
-        <Switch
-            android:id="@+id/lock_service_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="12dp"
-            android:textOff="OFF"
-            android:textOn="ON" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/lockServiceSettings"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:orientation="vertical"
-        android:paddingTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lockServiceRelativeLayout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lock_service_text"
-            android:textColor="#000"
-            android:textSize="15sp" />
-
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/gravity_seekbar"
+        <RelativeLayout
+            android:id="@+id/lockServiceRelativeLayout"
+            style="@style/featureTitleBackground"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:max="45"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="181dp" />
+            app:layout_constraintBottom_toTopOf="@+id/lockServiceSettings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
 
-    </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/alarmRelativeLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_margin="2dp"
-        android:layout_marginTop="8dp"
-        android:background="#000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lockServiceSettings">
+            <TextView
+                android:id="@+id/lock_service_title"
+                style="@style/featureTitles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/lock_service_switch"
+                android:layout_alignBottom="@+id/lock_service_switch"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:text="@string/sleep_mode_title" />
 
-        <TextView
-            android:id="@+id/alarm_title"
-            android:layout_width="wrap_content"
+            <Switch
+                android:id="@+id/lock_service_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="12dp"
+                android:textOff="OFF"
+                android:textOn="ON" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ShakeServiceRelativeLayout"
+            style="@style/featureTitleBackground"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/shakeServiceSettings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/alarmServiceSettings">
+
+            <TextView
+                android:id="@+id/shake_service_title"
+                style="@style/featureTitles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/shake_switch"
+                android:layout_alignBottom="@+id/shake_switch"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:text="@string/shake_service_title" />
+
+            <Switch
+                android:id="@+id/shake_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="12dp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/alarmRelativeLayout"
+            style="@style/featureTitleBackground"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/alarmServiceSettings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lockServiceSettings">
+
+            <TextView
+                android:id="@+id/alarm_title"
+                style="@style/featureTitles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/alarm_switch"
+                android:layout_alignBottom="@+id/alarm_switch"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:text="@string/alarm_service_title" />
+
+            <Switch
+                android:id="@+id/alarm_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="12dp" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/lockServiceSettings"
+            style="@style/featureSettingLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/alarm_switch"
-            android:layout_alignBottom="@+id/alarm_switch"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/alarm_service_title"
-            style="@style/titles"/>
+            app:layout_constraintBottom_toTopOf="@+id/alarmRelativeLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lockServiceRelativeLayout">
 
-        <Switch
-            android:id="@+id/alarm_switch"
-            android:layout_width="wrap_content"
+            <TextView
+                style="@style/featureDetailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lock_service_text" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/gravity_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:max="45"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="181dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/alarmServiceSettings"
+            style="@style/featureSettingLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="12dp" />
+            app:layout_constraintBottom_toTopOf="@+id/ShakeServiceRelativeLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/alarmRelativeLayout">
 
+            <TextView
+                style="@style/featureDetailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alarm_service_text" />
 
-    </RelativeLayout>
+        </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/ShakeServiceRelativeLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_margin="2dp"
-        android:layout_marginTop="348dp"
-        android:background="#000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarmRelativeLayout">
-
-        <TextView
-            android:id="@+id/shake_service_title"
-            style="@style/titles"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/shakeServiceSettings"
+            style="@style/featureSettingLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/shake_switch"
-            android:layout_alignBottom="@+id/shake_switch"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/shake_service_title" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ShakeServiceRelativeLayout">
 
-        <Switch
-            android:id="@+id/shake_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="12dp" />
+            <TextView
+                style="@style/featureDetailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/shake_service_text" />
 
+            <SeekBar
+                android:id="@+id/shakeServiceSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:max="2" />
 
-    </RelativeLayout>
+        </LinearLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

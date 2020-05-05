@@ -13,10 +13,31 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="titles">
+    <style name="featureTitles">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@color/featureTitle</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="featureTitleBackground">
+        <item name="android:background">@drawable/title_background</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
+
+    <style name="featureSettingLayout">
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="featureDetailText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/detailText</item>
+<!--        <item name="android:textAlignment">center</item>-->
     </style>
 
 </resources>
