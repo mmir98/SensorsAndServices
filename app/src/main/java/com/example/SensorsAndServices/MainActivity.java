@@ -197,12 +197,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopService(lockServiceIntent); //todo delete
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_ADMIN_ENABLE){
             if (resultCode == RESULT_OK){
