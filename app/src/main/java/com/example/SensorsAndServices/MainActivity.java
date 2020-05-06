@@ -1,11 +1,17 @@
 package com.example.SensorsAndServices;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 
@@ -31,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
     Switch lockServiceSwitch;
     Switch alarmServiceSwitch;
     Switch shakeServiceSwitch;
+
+    TimePicker timePicker;
+
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private Intent myIntent;
 
     static DevicePolicyManager devicePolicyManager;
     static ComponentName componentName;
@@ -56,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        alarmServiceSwitch.setChecked(false);
+    }
+
     private void initializeViews(){
         lockServiceSetting = findViewById(R.id.lockServiceSettings);
         alarmServiceSetting = findViewById(R.id.alarmServiceSettings);
@@ -68,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
         lockServiceSeekBar = findViewById(R.id.gravity_seekbar);
         shakeServiceSeekBar = findViewById(R.id.shakeServiceSeekBar);
 
+        timePicker = findViewById(R.id.time_picker);
+        timePicker.setIs24HourView(true);
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
     }
 
     private void initializeSwitchListeners(){
@@ -103,14 +129,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         alarmServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     initializeAlarmServiceSetting();
-                    //todo start alarm service
                 }
                 else{
                     alarmServiceSetting.setVisibility(View.GONE);
+
+                    alarmManager.cancel(pendingIntent);
+                    myIntent.putExtra("extra", "alarm off");
+                    sendBroadcast(myIntent);
                 }
             }
         });
@@ -155,9 +185,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initializeAlarmServiceSetting(){
         alarmServiceSetting.setVisibility(View.VISIBLE);
-        //todo initialize time picker and tone picker
+
+        final Calendar calendar = Calendar.getInstance();
+
+        Log.i("soundPlayer", "in main activity");
+        calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+        calendar.set(Calendar.MINUTE, timePicker.getMinute());
+        myIntent.putExtra("extra", "alarm on");
+
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     private void initializeShakeServiceSetting(){

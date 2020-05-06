@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.SensorsAndServices">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -12,8 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name="com.example.SensorsAndServices.MainActivity">
+        <activity android:name=".AlarmActivity"></activity>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,9 +20,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".LockService"
-            android:exported="false"
-            android:enabled="true"/>
+        <service
+            android:name=".LockService"
+            android:enabled="true"
+            android:exported="false" />
         <service android:name=".ShakeService" />
 
         <receiver
@@ -32,11 +32,17 @@
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/policies" />
+
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".AlarmReceiver" />
+
+        <service
+            android:name=".RingtonePlayingService"
+            android:enabled="true" />
     </application>
 
 </manifest>

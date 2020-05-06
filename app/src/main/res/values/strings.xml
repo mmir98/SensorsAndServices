@@ -12,4 +12,5 @@
 
     <string name="shake_service_title">Shake Service</string>
     <string name="shake_service_text">This feature allows you to unlock your device if shook.</string>
+    <string name="turn_off_alarm">Turn off Alarm</string>
 </resources>

@@ -95,46 +95,74 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/alarmRelativeLayout"
             style="@style/featureTitleBackground"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/alarmServiceSettings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lockServiceSettings">
+            app:layout_constraintTop_toBottomOf="@+id/lockServiceSettings"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/alarm_title"
-                style="@style/featureTitles"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/alarm_switch"
-                android:layout_alignBottom="@+id/alarm_switch"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:text="@string/alarm_service_title" />
+                android:orientation="horizontal"
+                android:gravity="center">
 
-            <Switch
-                android:id="@+id/alarm_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="12dp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|start">
 
+                    <TextView
+                        android:id="@+id/alarm_title"
+                        style="@style/featureTitles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:text="@string/alarm_service_title" />
 
-        </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|end">
+
+                    <Switch
+                        android:id="@+id/alarm_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_gravity="end|center_vertical"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TimePicker
+                    android:id="@+id/time_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lockServiceSettings"
@@ -181,6 +209,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/alarm_service_text" />
 
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -191,6 +221,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ShakeServiceRelativeLayout">
+
+
+
 
             <TextView
                 style="@style/featureDetailText"
@@ -208,6 +241,12 @@
                 android:max="2" />
 
         </LinearLayout>
+
+
+
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
