@@ -152,6 +152,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lock_service_text" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lock_service_indicator"
+                    android:textColor="#000"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/lock_service_threshold_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lock_service_default_value"
+                    android:layout_marginStart ="5dp"
+                    android:textColor="#000"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
             <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/gravity_seekbar"
                 android:layout_width="match_parent"
@@ -197,6 +220,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/shake_service_text" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shake_service_indicator"
+                    android:textColor="#000"
+                    android:textSize="18sp"
+                    />
+
+                <TextView
+                    android:id="@+id/shake_service_sensitivity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shake_service_default_sensitivity"
+                    android:layout_marginStart ="5dp"
+                    android:textColor="#000"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/shakeServiceSeekBar"

@@ -2,6 +2,7 @@ package com.example.SensorsAndServices;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,11 +14,16 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
+    public static final int SHAKE_SERVICE_LOW_SENSITIVITY = 0;
+    public static final int SHAKE_SERVICE_NORMAL_SENSITIVITY = 1;
+    public static final int SHAKE_SERVICE_HIGH_SENSITIVITY = 2;
 
     public static final int REQUEST_ADMIN_ENABLE = 0;
 
@@ -28,18 +34,24 @@ public class MainActivity extends AppCompatActivity {
     SeekBar lockServiceSeekBar;
     SeekBar shakeServiceSeekBar;
 
+    TextView lockServiceValueIndicator;
+    TextView shakeServiceSensitivityIndicator;
+
     Switch lockServiceSwitch;
     Switch alarmServiceSwitch;
     Switch shakeServiceSwitch;
 
+    private int userInput_lockValue = 20;
+    private int userInput_shakeSensitivity = SHAKE_SERVICE_NORMAL_SENSITIVITY;
+
     static DevicePolicyManager devicePolicyManager;
     static ComponentName componentName;
 
-    public static DevicePolicyManager getDevicePolicyManager(){
+    public static DevicePolicyManager getDevicePolicyManager() {
         return devicePolicyManager;
     }
 
-    public static ComponentName getComponent(){
+    public static ComponentName getComponent() {
         return componentName;
     }
 
@@ -53,10 +65,9 @@ public class MainActivity extends AppCompatActivity {
         initializeViews();
         initializeSwitchListeners();
 
-
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
         lockServiceSetting = findViewById(R.id.lockServiceSettings);
         alarmServiceSetting = findViewById(R.id.alarmServiceSettings);
         shakeServiceSetting = findViewById(R.id.shakeServiceSettings);
@@ -68,9 +79,12 @@ public class MainActivity extends AppCompatActivity {
         lockServiceSeekBar = findViewById(R.id.gravity_seekbar);
         shakeServiceSeekBar = findViewById(R.id.shakeServiceSeekBar);
 
+        lockServiceValueIndicator = findViewById(R.id.lock_service_threshold_value);
+        shakeServiceSensitivityIndicator = findViewById(R.id.shake_service_sensitivity);
+
     }
 
-    private void initializeSwitchListeners(){
+    private void initializeSwitchListeners() {
         lockServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -92,10 +106,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 //                    devicePolicyManager.removeActiveAdmin(componentName);
                     lockServiceSetting.setVisibility(View.GONE);
-                    try{
+                    try {
                         stopService(lockServiceIntent);
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 }
@@ -105,11 +118,10 @@ public class MainActivity extends AppCompatActivity {
         alarmServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     initializeAlarmServiceSetting();
                     //todo start alarm service
-                }
-                else{
+                } else {
                     alarmServiceSetting.setVisibility(View.GONE);
                 }
             }
@@ -119,11 +131,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Intent intent = new Intent(MainActivity.this, ShakeService.class);
-                if (isChecked){
+                if (isChecked) {
                     startService(intent);
                     initializeShakeServiceSetting();
-                }
-                else{
+                } else {
                     stopService(intent);
                     shakeServiceSetting.setVisibility(View.GONE);
                 }
@@ -133,11 +144,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeLockServiceSetting() {
+        lockServiceSeekBar.setProgress(userInput_lockValue);
         lockServiceSetting.setVisibility(View.VISIBLE);
         lockServiceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 Log.d(TAG, "onProgressChanged: " + progress);
+                lockServiceValueIndicator.setText(progress);
+                userInput_lockValue = progress;
                 Intent intent = new Intent(MainActivity.this, LockService.class);
                 intent.putExtra(LockService.NEW_THRESHOLD_VALUE, (double) (90 - progress));
                 startService(intent);
@@ -155,28 +169,35 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initializeAlarmServiceSetting(){
+    private void initializeAlarmServiceSetting() {
         alarmServiceSetting.setVisibility(View.VISIBLE);
         //todo initialize time picker and tone picker
     }
 
-    private void initializeShakeServiceSetting(){
+    private void initializeShakeServiceSetting() {
+        shakeServiceSeekBar.setProgress(userInput_shakeSensitivity);
         shakeServiceSetting.setVisibility(View.VISIBLE);
         shakeServiceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 Log.d(TAG, "onProgressChanged: SENSITIVITY CHANGED");
                 Intent intent = new Intent(MainActivity.this, ShakeService.class);
-                switch (progress){
-                    case 0:{ //low sensitivity
+                switch (progress) {
+                    case SHAKE_SERVICE_LOW_SENSITIVITY: { //low sensitivity
+                        shakeServiceSensitivityIndicator.setText(R.string.sensitivity_low);
+                        userInput_shakeSensitivity = SHAKE_SERVICE_LOW_SENSITIVITY;
                         intent.putExtra(ShakeService.CHANGE_SENSITIVITY, ShakeService.LOW_SENSITIVITY);
                         break;
                     }
-                    case 1:{ // normal sensitivity
+                    case SHAKE_SERVICE_NORMAL_SENSITIVITY: { // normal sensitivity
+                        shakeServiceSensitivityIndicator.setText(R.string.sensitivity_normal);
+                        userInput_shakeSensitivity = SHAKE_SERVICE_NORMAL_SENSITIVITY;
                         intent.putExtra(ShakeService.CHANGE_SENSITIVITY, ShakeService.NORMAL_SENSITIVITY);
                         break;
                     }
-                    case 2:{ //high sensitivity
+                    case SHAKE_SERVICE_HIGH_SENSITIVITY: { //high sensitivity
+                        shakeServiceSensitivityIndicator.setText(R.string.sensitivity_high);
+                        userInput_shakeSensitivity = SHAKE_SERVICE_HIGH_SENSITIVITY;
                         intent.putExtra(ShakeService.CHANGE_SENSITIVITY, ShakeService.HIGH_SENSITIVITY);
                         break;
                     }
@@ -198,14 +219,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_ADMIN_ENABLE){
-            if (resultCode == RESULT_OK){
+        if (requestCode == REQUEST_ADMIN_ENABLE) {
+            if (resultCode == RESULT_OK) {
                 Log.d(TAG, "onActivityResult: GOT PERMISSION");
                 Toast.makeText(this, "LOCK FEATURE ACTIVATED", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, LockService.class);
                 startService(intent);
                 initializeLockServiceSetting();
-            }else{
+            } else {
                 Log.d(TAG, "onActivityResult: PERMISSION DENIED");
                 Toast.makeText(this, "PERMISSION WOULD BE NEEDED", Toast.LENGTH_SHORT).show();
                 lockServiceSwitch.setChecked(false);
