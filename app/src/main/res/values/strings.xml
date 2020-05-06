@@ -4,6 +4,8 @@
     <string name="sleep_mode_title">Lock Service</string>
     <string name="lock_service_text">With this feature you can lock your device by putting it on a flat surface.\n
         Also you can specify an angle which is the angle between your device and flat surface.</string>
+    <string name="lock_service_indicator">Threshold angle :  </string>
+    <string name="lock_service_default_value">20</string>
 
     <string name="alarm_service_title">Alarm Service</string>
     <string name="alarm_service_text">This feature allows you to set up an alarm.
@@ -12,5 +14,11 @@
 
     <string name="shake_service_title">Shake Service</string>
     <string name="shake_service_text">This feature allows you to unlock your device if shook.</string>
+    <string name="shake_service_indicator">Sensitivity : </string>
+    <string name="shake_service_default_sensitivity">Normal</string>
+    <string name="sensitivity_low">Low</string>
+    <string name="sensitivity_normal">Normal</string>
+    <string name="sensitivity_high">High</string>
+
     <string name="turn_off_alarm">Turn off Alarm</string>
 </resources>
