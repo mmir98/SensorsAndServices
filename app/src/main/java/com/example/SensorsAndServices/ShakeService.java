@@ -64,7 +64,7 @@ public class ShakeService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.hasExtra(CHANGE_SENSITIVITY)){
+        if (intent.hasExtra(CHANGE_SENSITIVITY)) {
             int newSensitivity = intent.getIntExtra(CHANGE_SENSITIVITY, NORMAL_SENSITIVITY);
             Message msg = Message.obtain();
             msg.what = ShakeServiceHandler.SENSITIVITY_CHANGED;
@@ -81,7 +81,6 @@ public class ShakeService extends Service {
         unregisterReceiver(screenStatusReceiver);
         handlerThread.quit();
     }
-
 
 
     private final static class ShakeServiceHandler extends Handler implements SensorEventListener {
@@ -104,7 +103,7 @@ public class ShakeService extends Service {
         private long last_time = 0;
 
 
-        ShakeServiceHandler(Looper looper, SensorManager sensorManager, Sensor sensor, PowerManager powerManager){
+        ShakeServiceHandler(Looper looper, SensorManager sensorManager, Sensor sensor, PowerManager powerManager) {
             super(looper);
             this.sensorManager = sensorManager;
             this.sensor = sensor;
@@ -115,25 +114,27 @@ public class ShakeService extends Service {
 
         @Override
         public void handleMessage(@NonNull Message msg) {
-            switch (msg.what){
-                case SENSITIVITY_CHANGED:{
+            switch (msg.what) {
+                case SENSITIVITY_CHANGED: {
                     Log.d(TAG, "handleMessage: SENSITIVITY_CHANGED");
                     shakeThreshold = (int) msg.obj;
                     break;
                 }
-                case THRESHOLD_ACHIEVED:{
+                case THRESHOLD_ACHIEVED: {
                     Log.d(TAG, "handleMessage: THRESHOLD_ACHIEVED");
+                    wakeLock.setReferenceCounted(false);
                     wakeLock.acquire(1000);
                     break;
                 }
-                case DEVICE_SCREEN_ON:{
+                case DEVICE_SCREEN_ON: {
                     Log.d(TAG, "handleMessage: DEVICE_SCREEN_ON");
-                    wakeLock.release();
+                    if (wakeLock.isHeld())
+                        wakeLock.release();
                     sensorManager.unregisterListener(this);
                     this.removeMessages(THRESHOLD_ACHIEVED);
                     break;
                 }
-                case DEVICE_SCREEN_OFF:{
+                case DEVICE_SCREEN_OFF: {
                     Log.d(TAG, "handleMessage: DEVICE_SCREEN_OFF");
                     sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
                     break;
@@ -146,7 +147,7 @@ public class ShakeService extends Service {
             float[] values = {0, 0, 0};
 
             long current_time = System.currentTimeMillis();
-            if (current_time - last_time > 200){
+            if (current_time - last_time > 200) {
                 long difference_time = current_time - last_time;
                 last_time = current_time;
 
@@ -154,9 +155,9 @@ public class ShakeService extends Service {
                 values[1] = event.values[1];
                 values[2] = event.values[2];
 
-                float speed = Math.abs(values[0] + values[1] + values[2] - last_x - last_y -last_z) / difference_time * 10000;
+                float speed = Math.abs(values[0] + values[1] + values[2] - last_x - last_y - last_z) / difference_time * 10000;
 
-                if (speed >= shakeThreshold){
+                if (speed >= shakeThreshold) {
                     Log.d(TAG, "onSensorChanged: SHAKE DETECTED" + speed);
                     this.sendEmptyMessage(THRESHOLD_ACHIEVED);
                 }
