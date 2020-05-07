@@ -20,4 +20,5 @@
     <string name="sensitivity_normal">Normal</string>
     <string name="sensitivity_high">High</string>
 
+    <string name="turn_off_alarm">Turn off Alarm</string>
 </resources>

@@ -6,6 +6,8 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
     Switch alarmServiceSwitch;
     Switch shakeServiceSwitch;
 
+    TimePicker timePicker;
+
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private Intent myIntent;
+
 
     private static String userInputForLockValue = "userInputForLockValue";
     private static String userInputForShakeSensitivity = "userInputForShakeSensitivity";
@@ -74,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
         readSettings();
         initializeSwitchListeners();
 
+
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        alarmServiceSwitch.setChecked(false);
     }
 
     @Override
@@ -97,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
         lockServiceValueIndicator = findViewById(R.id.lock_service_threshold_value);
         shakeServiceSensitivityIndicator = findViewById(R.id.shake_service_sensitivity);
 
+        timePicker = findViewById(R.id.time_picker);
+        timePicker.setIs24HourView(true);
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
     }
 
     private void initializeSwitchListeners() {
@@ -131,13 +154,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         alarmServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (isChecked){
                     initializeAlarmServiceSetting();
-                    //todo start alarm service
-                } else {
+                }
+                else{
                     alarmServiceSetting.setVisibility(View.GONE);
+
+                    alarmManager.cancel(pendingIntent);
+                    myIntent.putExtra("extra", "alarm off");
+                    sendBroadcast(myIntent);
                 }
             }
         });
@@ -189,9 +217,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initializeAlarmServiceSetting() {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void initializeAlarmServiceSetting(){
         alarmServiceSetting.setVisibility(View.VISIBLE);
-        //todo initialize time picker and tone picker
+
+        final Calendar calendar = Calendar.getInstance();
+
+        Log.i("soundPlayer", "in main activity");
+        calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+        calendar.set(Calendar.MINUTE, timePicker.getMinute());
+        myIntent.putExtra("extra", "alarm on");
+
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     private void initializeShakeServiceSetting() {
@@ -239,14 +278,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_ADMIN_ENABLE) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_ADMIN_ENABLE){
+            if (resultCode == RESULT_OK){
                 Log.d(TAG, "onActivityResult: GOT PERMISSION");
                 Toast.makeText(this, "LOCK FEATURE ACTIVATED", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, LockService.class);
                 startService(intent);
                 initializeLockServiceSetting();
-            } else {
+            }else{
                 Log.d(TAG, "onActivityResult: PERMISSION DENIED");
                 Toast.makeText(this, "PERMISSION WOULD BE NEEDED", Toast.LENGTH_SHORT).show();
                 lockServiceSwitch.setChecked(false);
