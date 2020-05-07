@@ -2,12 +2,12 @@ package com.example.SensorsAndServices;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -16,6 +16,11 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
     Switch alarmServiceSwitch;
     Switch shakeServiceSwitch;
 
+
+    private static String userInputForLockValue = "userInputForLockValue";
+    private static String userInputForShakeSensitivity = "userInputForShakeSensitivity";
+    private static String lockServiceSwitchStatus = "lockServiceSwitchStatus";
+    private static String shakeServiceSwitchStatus = "shakeServiceSwitchStatus";
+    private static String alarmServiceSwitchStatus = "alarmServiceSwitchStatus";
+
     private int userInput_lockValue = 20;
     private int userInput_shakeSensitivity = SHAKE_SERVICE_NORMAL_SENSITIVITY;
 
@@ -51,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
         return devicePolicyManager;
     }
 
-    public static ComponentName getComponent() {
-        return componentName;
-    }
-
     Intent lockServiceIntent;
 
     @Override
@@ -63,8 +71,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initializeViews();
+        readSettings();
         initializeSwitchListeners();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveSettings();
     }
 
     private void initializeViews() {
@@ -135,7 +150,12 @@ public class MainActivity extends AppCompatActivity {
                     startService(intent);
                     initializeShakeServiceSetting();
                 } else {
-                    stopService(intent);
+                    try {
+                        stopService(intent);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
                     shakeServiceSetting.setVisibility(View.GONE);
                 }
             }
@@ -234,6 +254,75 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void saveSettings(){
+        final String fileDirectory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Integer.toString(R.string.app_name);
+        final String fileName = "Settings.json";
+        final JSONObject setting = new JSONObject();
+        try {
+            setting.put(lockServiceSwitchStatus, lockServiceSwitch.isChecked());
+            setting.put(alarmServiceSwitchStatus, alarmServiceSwitch.isChecked());
+            setting.put(shakeServiceSwitchStatus, shakeServiceSwitch.isChecked());
+
+            setting.put(userInputForLockValue, userInput_lockValue);
+            setting.put(userInputForShakeSensitivity, userInput_shakeSensitivity);
+
+            Log.d(TAG, "saveSettings: SAVE SUCCESSFUL");
+        }
+        catch (JSONException e){
+            Log.d(TAG, "saveSettings: SAVE UNSUCCESSFUL");
+            e.printStackTrace();
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                StorageManager.writeOnMemory(fileDirectory, fileName, setting);
+            }
+        }).start();
+    }
+
+    private void readSettings(){
+        final String fileDirectory = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Integer.toString(R.string.app_name);
+        final String fileName = "Settings.json";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String settings = StorageManager.readFromMemory(fileDirectory, fileName);
+                    final JSONObject settingsJSON = new JSONObject(settings);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                lockServiceSwitch.setChecked(settingsJSON.getBoolean(lockServiceSwitchStatus));
+                                alarmServiceSwitch.setChecked(settingsJSON.getBoolean(alarmServiceSwitchStatus));
+                                shakeServiceSwitch.setChecked(settingsJSON.getBoolean(shakeServiceSwitchStatus));
+
+                                userInput_shakeSensitivity = settingsJSON.getInt(userInputForShakeSensitivity);
+                                Log.d(TAG, "run: READ SUCCESSFUL");
+
+                                lockServiceSeekBar.setProgress(settingsJSON.getInt(userInputForLockValue));
+                                shakeServiceSeekBar.setProgress(settingsJSON.getInt(userInputForShakeSensitivity));
+                            } catch (JSONException e) {
+                                Log.d(TAG, "run: READ UNSUCCESSFUL");
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                catch (IOException e){
+                    Log.d(TAG, "run: FILE NOT FOUND");
+                    e.printStackTrace();
+                }
+                catch (JSONException e){
+                    Log.d(TAG, "run: JSON EXCEPTION");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
 
 }
