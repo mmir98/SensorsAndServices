@@ -22,5 +22,20 @@ public class AlarmActivity extends AppCompatActivity {
                 System.exit(0);
             }
         });
+
+        Thread cancelTime = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10 * 60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                finish();
+                System.exit(0);
+            }
+        });
+        cancelTime.start();
+
     }
 }
