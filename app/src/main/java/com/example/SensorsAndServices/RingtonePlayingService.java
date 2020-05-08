@@ -4,9 +4,15 @@ package com.example.SensorsAndServices;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -31,7 +37,6 @@ public class RingtonePlayingService extends Service {
         String state = intent.getExtras().getString("extra");
 
         // Fetch sound_choice integer values
-        int sound_id = intent.getExtras().getInt("sound_choice");
         assert state != null;
         switch (state) {
             case "alarm on":
@@ -106,6 +111,8 @@ public class RingtonePlayingService extends Service {
         super.onDestroy();
         this.isRunning = false;
     }
+
+
 
 }
 

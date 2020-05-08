@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.SensorsAndServices.AlarmActivity"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/cancel_button"
@@ -14,5 +15,6 @@
         style="@style/featureTitleBackground"
         android:text="@string/turn_off_alarm"
         android:textColor="@android:color/white"/>
+
 
 </LinearLayout>
